@@ -8,12 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:3000",
-    "http://localhost:3001"
+    'http://localhost:3000',
+    "http://localhost:3001",
+    "http://localhost:3000/transactions",
+    "http://localhost:3000/balance"
 ]
 
 app.add_middleware(
@@ -25,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(transactions)
+
 
 
 @app.get('/sanity' , response_class= JSONResponse , status_code= status.HTTP_200_OK)

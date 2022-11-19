@@ -11,15 +11,15 @@ transactions = APIRouter()
 
 @transactions.post('/transactions', response_class= JSONResponse , status_code= status.HTTP_201_CREATED)
 def addTransaction(transaction: Transaction):
-    print(transaction)
-    id = db.execute_insert_query(querys.sql_insert_transactions,(transaction.amount,transaction.category,transaction.vendor)) 
+    id = db.execute_insert_query(querys.sql_insert_transactions,(transaction.amount,transaction.category,transaction.vendor,transaction.type)) 
     return {
             "success": True,
             "payload": { 
                         "id":id,
                         "amount": transaction.amount,
                         "category": transaction.category,
-                        "vendor": transaction.vendor
+                        "vendor": transaction.vendor,
+                        "type": transaction.type
                     }
             }
 
@@ -28,6 +28,10 @@ def getTransactions():
     transactions_list = db.execute_select_all_query(querys.sql_select_all_transactions)
     return transactions_list
 
+@transactions.get('/balance',response_class= JSONResponse , status_code= status.HTTP_200_OK)
+def getTransactions():
+    balance = db.execute_select_one_query(querys.sql_balance_transactions)
+    return balance
 
 @transactions.delete('/transactions/{id}', response_class= JSONResponse , status_code= status.HTTP_204_NO_CONTENT)
 def deleteTransaction(id):
