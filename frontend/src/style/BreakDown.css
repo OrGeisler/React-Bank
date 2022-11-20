@@ -7,6 +7,11 @@
 
 }
 
+.title{
+    font-size: larger;
+    font-weight: bold;
+}
+
 .category{
 
     filter: drop-shadow(3px 3px 5px #222);

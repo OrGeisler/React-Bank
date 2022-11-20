@@ -7,6 +7,10 @@
 
 }
 
+.titel{
+    font-size: larger;
+    font-weight: bold;
+}
 .input{
     margin: auto;
 }

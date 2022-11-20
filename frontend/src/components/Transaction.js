@@ -8,15 +8,16 @@ import axios from 'axios'
 function Transaction(props) {
 
 
-  const onDelete = () => {
-        // const transaction = {'amount':parseInt(inputs.amount), 'category': inputs.category, 'vendor':inputs.vendor,'type': inputs.deposit ===true?'deposit':'withdraw'}
-    axios.delete(`http://localhost:8000/transactions/${props.transaction.id}`)
+  const onDelete = async () => {
+    await axios.delete(`http://localhost:8000/transactions/${props.transaction.id}`)
+    await props.updateTransactions()
+    await props.updateBalance()
   };
 
 
 
   return (
-    <Card className= {props.transaction.type} style={{ width: '20rem' }}>
+    <Card className= {props.transaction.amount<0?'withdraw':'deposit'} style={{ width: '20rem' }}>
       <Card.Body>
         <Card.Title>{props.transaction.vendor}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{props.transaction.category}</Card.Subtitle>

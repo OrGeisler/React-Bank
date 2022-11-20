@@ -17,6 +17,7 @@ class db_proxy:
 
     def execute_insert_query(self, sql_query, params):
         try:
+            self.connection.ping()
             with self.connection.cursor() as cursor:
                 cursor.execute(sql_query, params)
                 self.connection.commit()
@@ -27,6 +28,7 @@ class db_proxy:
 
     def execute_delete_query(self, sql_query, params):
         try:
+            self.connection.ping()
             with self.connection.cursor() as cursor:
                 cursor.execute(sql_query, params)
                 self.connection.commit()
@@ -39,6 +41,7 @@ class db_proxy:
 
     def execute_select_one_query(self, sql_query, params = None):
         try:
+            self.connection.ping()
             with self.connection.cursor() as cursor:
                 cursor.execute(sql_query, params) if params else cursor.execute(sql_query)
                 result = cursor.fetchone()
@@ -49,6 +52,7 @@ class db_proxy:
 
     def execute_select_all_query(self, sql_query, params = None):
         try:
+            self.connection.ping()
             with self.connection.cursor() as cursor:
                 cursor.execute(sql_query, params) if params else cursor.execute(sql_query)
                 result = cursor.fetchall()

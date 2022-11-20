@@ -9,16 +9,6 @@ import Navbar from 'react-bootstrap/Navbar';
 
 function AppNav(props) {
 
-  const [balance, setBalance] = useState('')
-
-
-  useEffect(() => {
-    axios.get('http://localhost:8000/balance').then((res) => {
-      setBalance(res.data)
-    })
-  }, [])
-
-
 
   return (
     <Navbar className='nav' bg="dark" variant="dark">
@@ -31,7 +21,7 @@ function AppNav(props) {
       </Nav>
       <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            Balance: {balance.sum}
+            Balance: {props.balance.sum}
           </Navbar.Text>
         </Navbar.Collapse>
     </Container>

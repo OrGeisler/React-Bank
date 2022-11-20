@@ -18,26 +18,9 @@ function BreakDown(props) {
     return (
       <Card className='breakdown' style={{ width: '20rem' }}>
         <Card.Body>
-          <Card.Title>BreakDown</Card.Title>
+          <Card.Title className='title'>BreakDown</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">Summary of your expenses </Card.Subtitle>
-          <Card.Text className='category'>
-              Trans
-          </Card.Text>
-          <Card.Text className='category'>
-              Food
-          </Card.Text>
-          <Card.Text className='category'>
-              Trans
-          </Card.Text>
-          <Card.Text className='category'>
-              Trans
-          </Card.Text>
-          <Card.Text className='category'>
-              Trans
-          </Card.Text>
-          <Card.Text className='category'>
-              Trans
-          </Card.Text>
+          {breakdown==''?null:breakdown.map((value,key) => <Card.Text key = {key} className='category'>{value['category']} : {value['amount']} </Card.Text>)}
         </Card.Body>
       </Card>
     );

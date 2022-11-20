@@ -11,22 +11,29 @@ import BreakDown from './components/BreakDown';
 
 function App() {
 
-  const [transactions, setTransactions] = useState('')
+  const [balance, setBalance] = useState('')
+
 
   useEffect(() => {
-    axios.get('http://localhost:8000/transactions').then((res) => {
-      setTransactions(res.data)
+    axios.get('http://localhost:8000/balance').then((res) => {
+      setBalance(res.data)
     })
   }, [])
+
+  const updateBalance = () =>{
+    axios.get('http://localhost:8000/balance').then((res) => {
+      setBalance(res.data)
+    })
+  }
 
   return (
     <Router>
     <div className="App">
     <div id="home-background"></div>
-    <AppNav/>
-    <Route path="/transactions" exact render={() => <Transactions transactions = {transactions}/>} />
+    <AppNav balance = {balance}/>
+    <Route path="/transactions" exact render={() => <Transactions updateBalance = {updateBalance}/>} />
     <Route path="/breakdown" exact render={() => <BreakDown></BreakDown>} />
-    <Route path="/operations" exact render={() =><Operation/>} />
+    <Route path="/operations" exact render={() =><Operation updateBalance = {updateBalance} balance ={balance}/>} />
     </div>
     </Router>
   );

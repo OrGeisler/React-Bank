@@ -11,16 +11,15 @@ transactions = APIRouter()
 
 @transactions.post('/transactions', response_class= JSONResponse , status_code= status.HTTP_201_CREATED)
 def addTransaction(transaction: Transaction):
-    id = db.execute_insert_query(querys.sql_insert_transactions,(transaction.amount,transaction.category,transaction.vendor,transaction.type)) 
+    id = db.execute_insert_query(querys.sql_insert_transactions,(transaction.amount,transaction.category,transaction.vendor)) 
     return {
             "success": True,
             "payload": { 
                         "id":id,
                         "amount": transaction.amount,
                         "category": transaction.category,
-                        "vendor": transaction.vendor,
-                        "type": transaction.type
-                    }
+                        "vendor": transaction.vendor                    
+                        }
             }
 
 @transactions.get('/transactions',response_class= JSONResponse , status_code= status.HTTP_200_OK)

@@ -5,4 +5,3 @@ class Transaction:
     amount: int
     category: str
     vendor: str
-    type: str

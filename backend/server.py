@@ -9,9 +9,7 @@ app = FastAPI()
 
 origins = [
     'http://localhost:3000',
-    "http://localhost:3001",
-    "http://localhost:3000/transactions",
-    "http://localhost:3000/balance"
+    "http://localhost:3001"
 ]
 
 app.add_middleware(
