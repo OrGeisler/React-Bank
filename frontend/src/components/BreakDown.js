@@ -1,8 +1,8 @@
 import Card from 'react-bootstrap/Card';
 import "../style/BreakDown.css";
-import Button from 'react-bootstrap/Button';
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import consts from "../model/consts"
 
 
 function BreakDown(props) {
@@ -10,7 +10,7 @@ function BreakDown(props) {
     const [breakdown, setBreakdown] = useState('')
 
     useEffect(() => {
-      axios.get('http://localhost:8000/breakdown').then((res) => {
+      axios.get(consts.CATEGORIES_BREAKDOWN_URL).then((res) => {
         setBreakdown(res.data)
       })
     }, [])

@@ -5,22 +5,32 @@ import React, { useState } from "react";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import consts from "../model/consts";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 function Operation(props) {
+
   const [inputs, setInputs] = useState({
-    amount: "",
-    vendor: "",
-    category: "",
-    deposit: false,
-    withdraw: false,
+    amount: consts.INIT_STRING,
+    vendor: consts.INIT_STRING,
+    category: consts.INIT_STRING,
+    type: "deposit",
   });
 
   const [valid, setValid] = useState({
-    type: "",
-    messege: "",
+    type: consts.INIT_STRING,
+    messege: consts.INIT_STRING,
   });
 
   const [open, setOpen] = React.useState(false);
+
+  const transactionTypeChange = (e) => {
+    const userInputs = { ...inputs };
+    userInputs["type"] = e.target.value;
+    setInputs(userInputs);
+  };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -41,54 +51,49 @@ function Operation(props) {
 
   const clearForm = () => {
     const userInputs = { ...inputs };
-    userInputs["amount"] = "";
-    userInputs["vendor"] = "";
-    userInputs["category"] = "";
-    userInputs["deposit"] = false;
-    userInputs["withdraw"] = false;
+    userInputs["amount"] = consts.INIT_STRING;
+    userInputs["vendor"] = consts.INIT_STRING;
+    userInputs["category"] = consts.INIT_STRING;
     setInputs(userInputs);
   };
 
   const validate = () => {
     const isValid = { ...valid };
-
-    if (inputs.amount == "" || inputs.category == "" || inputs.vendor == "") {
-      isValid["type"] = false;
+    isValid["type"] = false;
+    if (
+      inputs.amount == consts.INIT_STRING ||
+      inputs.category == consts.INIT_STRING ||
+      inputs.vendor == consts.INIT_STRING
+    ) {
       isValid["messege"] = "please fill all the fields";
       setValid(isValid);
-      return [false, "please fill all the fields"];
-    } else if (inputs.deposit == inputs.withdraw) {
-      isValid["type"] = false;
-      isValid["messege"] = "checkbox values are invalid";
-      setValid(isValid);
-      return [false, "checkbox values are invalid"];
+      return false;
     } else if (
-      inputs.withdraw == true &&
+      inputs.type == "withdraw" &&
       props.balance.sum < parseInt(inputs.amount)
     ) {
-      isValid["type"] = false;
       isValid["messege"] = "you dont have enough money!";
       setValid(isValid);
-      return [false, "you dont have enough money!"];
+      return false;
     } else {
       isValid["type"] = true;
       isValid["messege"] = "success!";
       setValid(isValid);
-      return [true, "success"];
+      return true;
     }
   };
 
   const onSubmit = async () => {
-    const [isvalid, _] = validate();
+    const isvalid = validate();
     if (isvalid) {
       const transaction = {
         amount: parseInt(
-          inputs.deposit === true ? inputs.amount : `-${inputs.amount}`
+          inputs.type === "deposit" ? inputs.amount : `-${inputs.amount}`
         ),
         category: inputs.category,
         vendor: inputs.vendor,
       };
-      await axios.post("http://localhost:8000/transactions", transaction);
+      await axios.post(consts.TRANSACTION_URL, transaction);
       await props.updateBalance();
     }
     clearForm();
@@ -105,7 +110,7 @@ function Operation(props) {
 
   return (
     <div>
-      <div className="form" style={{ width: "20rem", height: "27rem" }}>
+      <div className="form" style={{ width: "20rem", height: "31rem" }}>
         <Form.Label className="titel">Insert Transactions</Form.Label>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Text className="text-muted">
@@ -148,24 +153,28 @@ function Operation(props) {
             placeholder="Category"
           />
         </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check
-            name="deposit"
-            onChange={handleInput}
-            className="input"
-            style={{ width: "19rem" }}
-            type="checkbox"
-            label="Deposit"
-          />
-          <Form.Check
-            name="withdraw"
-            onChange={handleInput}
-            className="input"
-            style={{ width: "19rem" }}
-            type="checkbox"
-            label="Withdraw"
-          />
+        <Form.Group>
+          <Form.Label id="demo-controlled-radio-buttons-group">
+            Transaction type
+          </Form.Label>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={inputs["type"]}
+            onChange={transactionTypeChange}
+            style={{ marginLeft: "1rem" }}
+          >
+            <FormControlLabel
+              value="deposit"
+              control={<Radio />}
+              label="Deposit"
+            />
+            <FormControlLabel
+              value="withdraw"
+              control={<Radio />}
+              label="Withdraw"
+            />
+          </RadioGroup>
         </Form.Group>
         <Button variant="primary" onClick={onSubmit}>
           Submit
@@ -174,7 +183,7 @@ function Operation(props) {
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
-          severity={valid["type"] ? "success" : "error"}
+          severity={valid["type"] ? consts.SUCCESS : consts.ERROR}
           sx={{ width: "100%" }}
         >
           {valid["messege"]}

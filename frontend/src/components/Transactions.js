@@ -4,19 +4,20 @@ import Button from 'react-bootstrap/Button';
 import Transaction from './Transaction';
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import consts from "../model/consts"
 
 function Transactions(props) {
 
   const [transactions, setTransactions] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:8000/transactions').then((res) => {
+    axios.get(consts.TRANSACTION_URL).then((res) => {
       setTransactions(res.data)
     })
   }, [])
 
   const updateTransactions = () =>{
-    axios.get('http://localhost:8000/transactions').then((res) => {
+    axios.get(consts.TRANSACTION_URL).then((res) => {
       setTransactions(res.data)
     })
   }
