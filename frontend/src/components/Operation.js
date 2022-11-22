@@ -24,7 +24,7 @@ function Operation(props) {
     messege: consts.INIT_STRING,
   });
 
-  const [open, setOpen] = React.useState(false);
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
 
   const transactionTypeChange = (e) => {
     const userInputs = { ...inputs };
@@ -36,7 +36,7 @@ function Operation(props) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const handleInput = (e) => {
+  const handleFormInput = (e) => {
     const userInputs = { ...inputs };
     let value;
     let name = e.target.attributes.name.value;
@@ -57,7 +57,7 @@ function Operation(props) {
     setInputs(userInputs);
   };
 
-  const validate = () => {
+  const isTransacionValid = () => {
     const isValid = { ...valid };
     isValid["type"] = false;
     if (
@@ -83,8 +83,8 @@ function Operation(props) {
     }
   };
 
-  const onSubmit = async () => {
-    const isvalid = validate();
+  const onTransactionSubmit = async () => {
+    const isvalid = isTransacionValid();
     if (isvalid) {
       const transaction = {
         amount: parseInt(
@@ -97,15 +97,15 @@ function Operation(props) {
       await props.updateBalance();
     }
     clearForm();
-    setOpen(true);
+    setOpenSnackBar(true);
   };
 
-  const handleClose = (event, reason) => {
+  const closeSnackBar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
+    setOpenSnackBar(false);
   };
 
   return (
@@ -119,7 +119,7 @@ function Operation(props) {
           <Form.Label>Transaction Amount</Form.Label>
           <Form.Control
             name="amount"
-            onChange={handleInput}
+            onChange={handleFormInput}
             className="input"
             style={{ width: "19rem" }}
             value={inputs.amount}
@@ -132,7 +132,7 @@ function Operation(props) {
           <Form.Label>Transaction Vendor</Form.Label>
           <Form.Control
             name="vendor"
-            onChange={handleInput}
+            onChange={handleFormInput}
             className="input"
             style={{ width: "19rem" }}
             value={inputs.vendor}
@@ -145,7 +145,7 @@ function Operation(props) {
           <Form.Label>Transaction Category</Form.Label>
           <Form.Control
             name="category"
-            onChange={handleInput}
+            onChange={handleFormInput}
             className="input"
             style={{ width: "19rem" }}
             value={inputs.category}
@@ -176,13 +176,13 @@ function Operation(props) {
             />
           </RadioGroup>
         </Form.Group>
-        <Button variant="primary" onClick={onSubmit}>
+        <Button variant="primary" onClick={onTransactionSubmit}>
           Submit
         </Button>
       </div>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={closeSnackBar}>
         <Alert
-          onClose={handleClose}
+          onClose={closeSnackBar}
           severity={valid["type"] ? consts.SUCCESS : consts.ERROR}
           sx={{ width: "100%" }}
         >
